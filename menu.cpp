@@ -194,6 +194,7 @@ int Menu::make(const char* title1, const char* title2, const char* title3, const
         wrefresh(menuWindow);
 
         if (longChar == 10){ //Here's the code to return the correct number
+            intValue = intActive;
             return intActive;
         }
     }
@@ -201,6 +202,11 @@ int Menu::make(const char* title1, const char* title2, const char* title3, const
     return -1;
 
 
+}
+
+
+int Menu::value(){
+    return menuValue;
 }
 
 

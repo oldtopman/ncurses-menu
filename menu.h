@@ -11,7 +11,7 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 
 class Menu{
     private:
-    int menuChoice, menuHeight, intEscape, intx, inty, intOptions, intCounter, intControl, intActive, intLastActive, intWidth, intArea;
+    int menuChoice, menuHeight, intEscape, intx, inty, intOptions, intCounter, intControl, intActive, intLastActive, intWidth, intArea, intValue;
     long longChar;
     char charCorner, charSide, charTop;
     WINDOW* menuWindow;
@@ -22,6 +22,7 @@ class Menu{
     int options(int p_intOptions);
     int width(int p_intWidth);
     int make(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5);
+    int value();
     void clean();
 
     Menu()
@@ -37,6 +38,7 @@ class Menu{
     intLastActive(1),
     intWidth(15),
     intArea(0),
+    intValue(0),
     longChar(0),
     charCorner('+'),
     charSide('|'),
