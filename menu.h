@@ -1,3 +1,9 @@
+/*
+Please note that all of the variables used in quickMake are shadowed.
+I was inexperienced and had no idea.
+They are mostly used in the other functions, so quickMenu will no longer be updated.
+*/
+
 #include <string>
 #include <ncurses.h>
 #ifndef MENU_H_INCLUDED
@@ -5,13 +11,17 @@
 
 class Menu{
     private:
-    int menuChoice, menuHeight, intEscape, intx, inty, intOptions, intCounter, intControl, intActive, intLastActive, intWidth;
+    int menuChoice, menuHeight, intEscape, intx, inty, intOptions, intCounter, intControl, intActive, intLastActive, intWidth, intArea;
     long longChar;
     char charCorner, charSide, charTop;
     WINDOW* menuWindow;
 
     public:
-    int make(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5,int intEscape,int intx,int inty,int intOptions);
+    int quickMake(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5,int intEscape,int intx,int inty,int intOptions);
+    int position(int p_intx,int p_inty);
+    int options(int p_intOptions);
+    int width(int p_intWidth);
+    int make(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5);
     void clean();
 
     Menu()
@@ -26,11 +36,12 @@ class Menu{
     intActive(1),
     intLastActive(1),
     intWidth(15),
+    intArea(0),
     longChar(0),
     charCorner('+'),
     charSide('|'),
     charTop('-'),
-    menuWindow(newwin(menuHeight, intWidth, inty, intx)),
+    menuWindow(newwin(menuHeight, intWidth, inty, intx))
     {}
 };
 
