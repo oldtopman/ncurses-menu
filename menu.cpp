@@ -206,7 +206,7 @@ int Menu::make(const char* title1, const char* title2, const char* title3, const
 
 
 int Menu::value(){
-    return menuValue;
+    return intValue;
 }
 
 
@@ -220,6 +220,8 @@ void Menu::clean(){
     }
     wrefresh(menuWindow);
     delwin(menuWindow);
+
+    intCounter = 1; //Lets a screen be made multiple times.
 }
 
 /* STILL IN DEVELOPMENT, USE AT YOUR OWN RISK!
