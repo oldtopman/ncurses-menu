@@ -6,46 +6,38 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 
 #include <string>
 #include <ncurses.h>
-#ifndef MENU_H_INCLUDED
-#define MENU_H_INCLUDED
+#ifndef DIALOGBOX_H_INCLUDED
+#define DIALOGBOX_H_INCLUDED
 
-class Menu{
+class DialogBox{
     private:
-    int menuChoice, menuHeight, intEscape, intx, inty, intOptions, intCounter, intControl, intActive, intLastActive, intWidth, intArea, intValue;
-    long longChar;
+    bool attention;
+    int x,y,width;
+    long keyPress;
     char charCorner, charSide, charTop;
-    WINDOW* menuWindow;
+
+    WINDOW* dialogBoxWindow;
 
     public:
-    int quickMake(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5,int intWidth,int intx,int inty,int intOptions);
-    int position(int p_intx,int p_inty);
-    int options(int p_intOptions);
-    int width(int p_intWidth);
-    int make(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5);
-    int value();
+    int quickMake(const char* p_text,int p_x,int p_y,int p_width,bool p_attention);
+    int options(int p_x,int p_y,int p_width,bool p_attention);
+    int make(const char* p_text);
+    void update();
     void clean();
 
-    Menu()
-    :menuChoice(0),
-    menuHeight(0),
-    intEscape(0),
-    intx(0),
-    inty(0),
-    intOptions(0),
-    intCounter(1),
-    intControl(0),
-    intActive(1),
-    intLastActive(1),
-    intWidth(15),
-    intArea(0),
-    intValue(0),
-    longChar(0),
+    DialogBox()
+    :attention(false),
+    x(0),
+    y(0),
+    width(0),
+    keyPress(0),
     charCorner('+'),
     charSide('|'),
     charTop('-'),
-    menuWindow(newwin(menuHeight, intWidth, inty, intx))
+
+    dialogBoxWindow()
     {}
 };
 
 
-#endif // MENU_H_INCLUDED
+#endif // DIALOGBOX_H_INCLUDED
