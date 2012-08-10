@@ -18,9 +18,7 @@ class Menu{
 
     public:
     int quickMake(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5,int intWidth,int intx,int inty,int intOptions);
-    int position(int p_intx,int p_inty);
-    int options(int p_intOptions);
-    int width(int p_intWidth);
+    int options(int p_intOptions, int p_intx, int p_inty, int p_intWidth);
     int make(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5);
     int value();
     void clean();
