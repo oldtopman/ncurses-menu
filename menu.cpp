@@ -95,7 +95,6 @@ int Menu::make(const char* title1, const char* title2, const char* title3, const
 
     wrefresh(menuWindow); //Draw the screen
 
-    //while(true); //Test the initial drawings
 
     while(intControl != 1){
         longChar = wgetch(menuWindow); //Get the keypress
@@ -147,6 +146,7 @@ void Menu::clean(){
     delwin(menuWindow);
 
     intCounter = 1; //Lets a screen be made multiple times.
+    intActive = 1; //Resets cursor position. Remove to activate cursor position memory.
 }
 
 /* STILL IN DEVELOPMENT, USE AT YOUR OWN RISK!
