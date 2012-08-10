@@ -12,7 +12,7 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 class DialogBox{
     private:
     bool attention;
-    int x,y,width;
+    int x,y,width,area;
     long keyPress;
     char charCorner, charSide, charTop;
 
@@ -30,6 +30,7 @@ class DialogBox{
     x(0),
     y(0),
     width(0),
+    area(0),
     keyPress(0),
     charCorner('+'),
     charSide('|'),
