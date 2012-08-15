@@ -6,6 +6,7 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 
 #include <string>
 #include <ncurses.h>
+#include <sstream>
 #ifndef DIALOGBOX_H_INCLUDED
 #define DIALOGBOX_H_INCLUDED
 
@@ -22,6 +23,7 @@ class DialogBox{
     int quickMake(const char* p_text,int p_x,int p_y,int p_width,bool p_attention);
     int options(int p_x,int p_y,int p_width,bool p_attention);
     int make(const char* p_text);
+    int makeNumber(int p_number);
     void update();
     void clean();
 

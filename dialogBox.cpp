@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
 #include "dialogBox.h"
 #include "menu.h"
 
@@ -59,7 +60,7 @@ int DialogBox::make(const char* p_text){
     //If attention == true; Wait for enter press
     if (attention == true){
 
-        while (keyPress != 10){ //10 is enter, use OR to add more keypresses
+        while (keyPress != KEY_BACKSPACE){ //10 is enter, use OR to add more keypresses
             keyPress = wgetch(dialogBoxWindow);
         }
     }
@@ -94,4 +95,21 @@ void DialogBox::clean(){
     delwin(dialogBoxWindow);
 }
 
+
+int DialogBox::makeNumber(int p_number){
+
+    //Create conversion string
+    std::string stringConversion;
+    std::stringstream stringStreamConverter;
+
+    //Convert int to string
+    stringStreamConverter << p_number;
+    stringConversion = stringStreamConverter.str();
+
+    //Call make with the string
+    //.c_str(); will convert from string to const char*
+    DialogBox::make(stringConversion.c_str());
+
+    return 0;
+}
 
