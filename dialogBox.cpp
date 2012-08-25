@@ -60,7 +60,7 @@ int DialogBox::make(const char* p_text){
     //If attention == true; Wait for enter press
     if (attention == true){
 
-        while (keyPress != KEY_BACKSPACE){ //10 is enter, use OR to add more keypresses
+        while (keyPress != 32){ //10 is enter, use OR to add more keypresses
             keyPress = wgetch(dialogBoxWindow);
         }
     }

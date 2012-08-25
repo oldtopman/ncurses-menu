@@ -117,7 +117,7 @@ int Menu::make(const char* title1, const char* title2, const char* title3, const
         mvwprintw(menuWindow, intActive, intWidth-3, "<="); //Draw and refresh the cursor
         wrefresh(menuWindow);
 
-        if (longChar == KEY_BACKSPACE){ //Here's the code to return the correct number
+        if (longChar == 32){ //Here's the code to return the correct number
             intValue = intActive;
             return intActive;
         }
