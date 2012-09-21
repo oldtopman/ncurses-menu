@@ -7,13 +7,6 @@
 #include "dialogBox.h"
 #include "menu.h"
 
-/*
-    int quickMake(const char* p_text,int p_x,int p_y,int p_width,bool p_attention);
-    int options(int p_x,int p_y,int p_width,bool p_attention);
-    int make(const char* p_text);
-    void clean();
-*/
-
 int DialogBox::quickMake(const char* p_text,int p_x,int p_y,int p_width,bool p_attention){
 
     //Error checking
@@ -46,12 +39,17 @@ int DialogBox::options(int p_x,int p_y,int p_width,bool p_attention){
 
 int DialogBox::make(const char* p_text){
 
-    dialogBoxWindow = newwin(3, width, y, x); //Create the window
-    wborder(dialogBoxWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
+    if(hasInitialized == false){
 
-    //Init options
-    keypad(dialogBoxWindow, TRUE);
-	curs_set(0);
+        dialogBoxWindow = newwin(3, width, y, x); //Create the window
+        wborder(dialogBoxWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
+
+        //Init options
+        keypad(dialogBoxWindow, TRUE);
+        curs_set(0);
+
+        hasInitialized = true;
+    }
 
     //Draw text
     mvwprintw(dialogBoxWindow, 1, 1, p_text);
@@ -64,6 +62,9 @@ int DialogBox::make(const char* p_text){
             keyPress = wgetch(dialogBoxWindow);
         }
     }
+
+    //Cleans it if you use the function again.
+    keyPress = 0;
 
     //If attention == false, exit.
     return 0;
@@ -93,6 +94,7 @@ void DialogBox::clean(){
     }
     wrefresh(dialogBoxWindow);
     delwin(dialogBoxWindow);
+    hasInitialized = false;
 }
 
 
@@ -110,6 +112,29 @@ int DialogBox::makeNumber(int p_number){
     //.c_str(); will convert from string to const char*
     DialogBox::make(stringConversion.c_str());
 
+    return 0;
+}
+
+
+int DialogBox::title(const char* p_title){
+
+    titleLength = strlen(p_title);
+
+    //If letterCount is 0, then remove the title.
+    if (titleLength < 1){
+        wborder(dialogBoxWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner);
+        wrefresh(dialogBoxWindow);
+        return 0;
+    }
+
+    //If the screen is too narrow, abort
+    if (titleLength > width){
+        return -1;
+    }
+
+    //Draw the title at the center top of the screen.
+    mvwprintw(dialogBoxWindow, 0, ((width-titleLength)/2), p_title);
+    wrefresh(dialogBoxWindow);
     return 0;
 }
 

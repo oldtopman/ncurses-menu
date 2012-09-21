@@ -12,8 +12,9 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 
 class DialogBox{
     private:
+    bool hasInitialized;
     bool attention;
-    int x,y,width,area;
+    int x,y,width,area,titleLength;
     long keyPress;
     char charCorner, charSide, charTop;
 
@@ -24,15 +25,18 @@ class DialogBox{
     int options(int p_x,int p_y,int p_width,bool p_attention);
     int make(const char* p_text);
     int makeNumber(int p_number);
+    int title(const char* p_title);
     void update();
     void clean();
 
     DialogBox()
-    :attention(false),
+    :hasInitialized(false),
+    attention(false),
     x(0),
     y(0),
     width(0),
     area(0),
+    titleLength(0),
     keyPress(0),
     charCorner('+'),
     charSide('|'),
