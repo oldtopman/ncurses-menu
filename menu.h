@@ -11,32 +11,39 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 
 class Menu{
     private:
-    int menuChoice, menuHeight, intEscape, intx, inty, intOptions, intCounter, intControl, intActive, intLastActive, intWidth, intArea, intValue;
+    bool hasMade, hasOptioned;
+    int menuHeight, intx, inty, intOptions, intActive, intLastActive, intWidth, intArea, intValue, titleCount, optionsCounter;
+    unsigned int longestWord;
     long longChar;
     char charCorner, charSide, charTop;
+
+    char * titleArray[35];
     WINDOW* menuWindow;
+    char * titleBuffer;
+
+    int scrollMake(const char* p_csvTitles);
 
     public:
-    int quickMake(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5,int intWidth,int intx,int inty,int intOptions);
-    int options(int p_intOptions, int p_intx, int p_inty, int p_intWidth);
-    int make(const char* title1, const char* title2, const char* title3, const char* title4, const char* title5);
+    int quickMake(const char* p_csvTitles,int intx,int inty);
+    int options(int p_intx, int p_inty);
+    int make(const char* p_csvTitles);
+    //scrollMake goes here, a private function.
     int value();
     void clean();
-
     Menu()
-    :menuChoice(0),
+    :hasMade(false),
     menuHeight(0),
-    intEscape(0),
     intx(0),
     inty(0),
     intOptions(0),
-    intCounter(1),
-    intControl(0),
     intActive(1),
     intLastActive(1),
     intWidth(15),
     intArea(0),
     intValue(0),
+    titleCount(0),
+    optionsCounter(0),
+    longestWord(0),
     longChar(0),
     charCorner('+'),
     charSide('|'),
