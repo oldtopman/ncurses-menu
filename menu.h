@@ -12,7 +12,7 @@ They are mostly used in the other functions, so quickMenu will no longer be upda
 class Menu{
     private:
     bool hasMade, hasOptioned;
-    int menuHeight, intx, inty, intOptions, intActive, intLastActive, intWidth, intArea, intValue, titleCount, optionsCounter;
+    int menuHeight, intx, inty, intOptions, intActive, intLastActive, intWidth, intArea, intValue, titleCount, optionsCounter, clearOptionsCounter, optionsHeight, offset;
     unsigned int longestWord;
     long longChar;
     char charCorner, charSide, charTop;
@@ -24,14 +24,17 @@ class Menu{
     int scrollMake(const char* p_csvTitles);
 
     public:
-    int quickMake(const char* p_csvTitles,int intx,int inty);
-    int options(int p_intx, int p_inty);
+    int quickMake(const char* p_csvTitles,int intx,int inty,int p_height);
+    int options(int p_intx, int p_inty, int p_height);
     int make(const char* p_csvTitles);
     //scrollMake goes here, a private function.
     int value();
     void clean();
+
+
     Menu()
     :hasMade(false),
+    hasOptioned(false),
     menuHeight(0),
     intx(0),
     inty(0),
@@ -43,12 +46,16 @@ class Menu{
     intValue(0),
     titleCount(0),
     optionsCounter(0),
+    clearOptionsCounter(0),
+    optionsHeight(0),
+    offset(0),
     longestWord(0),
     longChar(0),
     charCorner('+'),
     charSide('|'),
     charTop('-'),
-    menuWindow(newwin(menuHeight, intWidth, inty, intx))
+    menuWindow(newwin(menuHeight, intWidth, inty, intx)),
+    titleBuffer()
     {}
 };
 
