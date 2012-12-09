@@ -56,15 +56,61 @@ int DialogBox::options(int p_x,int p_y,int p_width,bool p_attention){
 int DialogBox::make(const char* p_text){
 
     //Declare local variables.
+
+    //User-changable vars.
+    const char * splitChar = "_"; //Character to split lines on.
+
+    //Misc. vars.
+    int count = 0;
     long keyPress;
+
+    //Vars for the line-splitting.
+    int splitCounter = 0;
+    int longestLine = 0;
+    char * splitBuffer;
+    std::string splitTextArray[35];
+
     //End declaration of local variables.
+
+    /****************************************************************************************/
+
+    #ifdef _WIN32
+    //Error on strings that are too long.
+    if ((strlen(p_csvTitles)+1) >= 9001){ return -1; }
+    char textCharArray[9001];
+    #else
+    char textCharArray[strlen(p_text)+1];
+    #endif
+
+    //No need for strncpy due to the definition of the array based on the size of the string.
+    //Maybe do something about this for le winblows?
+    strcpy(textCharArray,p_text);
+
+    splitBuffer = strtok(textCharArray,splitChar);
+
+    while(splitBuffer != NULL){
+
+        //Save the titles into the array
+        splitTextArray[splitCounter] = splitBuffer;
+        splitCounter++;
+
+        //Calculate the longest word for the width of things.
+        if(strlen(splitBuffer) > longestLine ){ longestLine = strlen(splitBuffer); }
+
+        //Quit before an overflow.
+        if(splitCounter >= 34){ break; }
+
+        splitBuffer = strtok(NULL,splitChar);
+    }
+
+    /*****************************************************************************************/
 
     if(hasInitialized == false){
 
         if (originalWidth < 3){
 
             //Set the "tight" width.
-            width = strlen(p_text) + 2;
+            width = longestLine + 2;
         }
         else{
 
@@ -72,7 +118,7 @@ int DialogBox::make(const char* p_text){
             width = originalWidth;
         }
 
-        dialogBoxWindow = newwin(3, width, y, x); //Create the window
+        dialogBoxWindow = newwin(splitCounter+2, width, y, x); //Create the window
         wborder(dialogBoxWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
 
         //Init options
@@ -82,13 +128,18 @@ int DialogBox::make(const char* p_text){
         hasInitialized = true;
     }
 
-    //Draw text
-    mvwprintw(dialogBoxWindow, 1, 1, p_text);
+    //Draw the text
+    count = 0;
+    while(count < splitCounter){
+        mvwprintw(dialogBoxWindow,count+1,1,splitTextArray[count].c_str());
+        count++;
+    }
+
+    //Magick here, causes the text to show up :o
     wrefresh(dialogBoxWindow);
 
     //If attention == true; Wait for enter press
     if (attention == true){
-
         while (keyPress != 32){ //10 is enter, use OR to add more keypresses
             keyPress = wgetch(dialogBoxWindow);
         }
@@ -127,6 +178,7 @@ void DialogBox::update(){
 
 void DialogBox::clean(){
     wclear(dialogBoxWindow);
+    wrefresh(dialogBoxWindow);
     delwin(dialogBoxWindow);
     hasInitialized = false;
 }

@@ -205,7 +205,7 @@ int Menu::toolTip(const char* p_csvToolTip){
     while(toolTipBuffer != NULL){
 
         //Save the titles into the array
-        toolTipArray[toolTipCount] = toolTipBuffer;
+        toolTipArrayString[toolTipCount] = toolTipBuffer;
         toolTipCount++;
 
         //Calculate the longest word for the width of things.
@@ -215,13 +215,6 @@ int Menu::toolTip(const char* p_csvToolTip){
         if(toolTipCount >= 34){ return -1; }
 
         toolTipBuffer = strtok(NULL,",");
-    }
-
-    //Read toolTips into string.
-    int counter = toolTipCount-1;
-    while(counter >= 0){
-        toolTipArrayString[counter] = toolTipArray[counter];
-        counter--;
     }
 
     //Close up.
