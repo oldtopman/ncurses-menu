@@ -28,6 +28,20 @@
 #include "dialogBox.h"
 #include "menu.h"
 
+
+int Menu::quickMake(const char* p_csvTitles,const char * p_csvToolTip,int intx,int inty,int p_height){
+
+    //Open up the error checking.
+    int error;
+
+    //Pass the options.
+    error = Menu::toolTip(p_csvToolTip);
+    if(error < 0){ return error; }
+
+    return Menu::quickMake(p_csvTitles,intx,inty,p_height);
+}
+
+
 int Menu::quickMake(const char* p_csvTitles,int intx,int inty,int p_height){
 
     //Invalid input detection
@@ -59,6 +73,13 @@ int Menu::options(int p_intx, int p_inty,int p_height){
 
     //Nothing else to do
     return 0;
+}
+
+
+int Menu::make(const char * p_csvTitles, const char * p_csvToolTip){
+    //Pass along the options.
+    Menu::toolTip(p_csvToolTip);
+    return Menu::make(p_csvTitles);
 }
 
 
@@ -265,6 +286,13 @@ int Menu::scrollMake(const char* p_csvTitles){
 
     menuHeight = optionsHeight; //This contols the absolute menu height
 
+    //Set the options for the toolTipDbox.
+    if(hasToolTips == true){
+
+        //Draw it just to the right of the menu.
+        toolTipDbox.options(intx+intWidth+1,inty,0,0);
+    }
+
     menuWindow = newwin(menuHeight, intWidth, inty, intx); //Create the window
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
@@ -295,6 +323,12 @@ int Menu::scrollMake(const char* p_csvTitles){
 
         //Draw the arrow.
         mvwprintw(menuWindow, intActive, intWidth-3, "<=");
+
+        //Draw the toolTip (if applicable)
+        if (hasToolTips == true){
+            toolTipDbox.clean();
+            toolTipDbox.make(toolTipArrayString[intActive+offset-1].c_str());
+        }
 
         //Check for keypresses.
         longChar = wgetch(menuWindow);

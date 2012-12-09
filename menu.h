@@ -35,8 +35,6 @@ class Menu{
     char charCorner, charSide, charTop;
 
     char * titleArray[35];
-    std::string titleArrayString[35];
-    char * toolTipArray[35];
     std::string toolTipArrayString[35];
     WINDOW* menuWindow;
     char * titleBuffer;
@@ -46,8 +44,10 @@ class Menu{
     int scrollMake(const char* p_csvTitles);
 
     public:
+    int quickMake(const char* p_csvTitles,const char * p_csvToolTip,int intx,int inty,int p_height);
     int quickMake(const char* p_csvTitles,int intx,int inty,int p_height);
     int options(int p_intx, int p_inty, int p_height);
+    int make(const char * p_csvTitles, const char * p_csvToolTip);
     int make(const char* p_csvTitles);
     int toolTip(const char* p_csvToolTip);
     //scrollMake goes here, a private function.
@@ -80,8 +80,6 @@ class Menu{
     charSide('|'),
     charTop('-'),
     titleArray(),
-    titleArrayString(),
-    toolTipArray(),
     toolTipArrayString(),
     menuWindow(newwin(menuHeight, intWidth, inty, intx)),
     titleBuffer(),
