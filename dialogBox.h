@@ -17,9 +17,7 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string>
 #include <ncurses.h>
-#include <sstream>
 #ifndef DIALOGBOX_H_INCLUDED
 #define DIALOGBOX_H_INCLUDED
 
@@ -36,6 +34,7 @@ class DialogBox{
     int quickMake(const char* p_text,int p_x,int p_y,int p_width,bool p_attention);
     int options(int p_x,int p_y,int p_width,bool p_attention);
     int make(const char* p_text);
+    int make(int p_number);
     int makeNumber(int p_number);
     int title(const char* p_title);
     void update();

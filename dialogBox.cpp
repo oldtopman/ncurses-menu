@@ -18,13 +18,10 @@
 */
 
 #include <ncurses.h>
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <string>
 #include <sstream>
+#include <string.h>
 #include "dialogBox.h"
-#include "menu.h"
 
 int DialogBox::quickMake(const char* p_text,int p_x,int p_y,int p_width,bool p_attention){
 
@@ -105,21 +102,7 @@ int DialogBox::make(const char* p_text){
 }
 
 
-void DialogBox::update(){
-
-    //Update window, bringing it to front.
-    wrefresh(dialogBoxWindow);
-}
-
-
-void DialogBox::clean(){
-    wclear(dialogBoxWindow);
-    delwin(dialogBoxWindow);
-    hasInitialized = false;
-}
-
-
-int DialogBox::makeNumber(int p_number){
+int DialogBox::make(int p_number){
 
     //Create conversion string
     std::string stringConversion;
@@ -131,9 +114,21 @@ int DialogBox::makeNumber(int p_number){
 
     //Call make with the string
     //.c_str(); will convert from string to const char*
-    DialogBox::make(stringConversion.c_str());
+    return DialogBox::make(stringConversion.c_str());
+}
 
-    return 0;
+
+void DialogBox::update(){
+
+    //Update window, bringing it to front.
+    wrefresh(dialogBoxWindow);
+}
+
+
+void DialogBox::clean(){
+    wclear(dialogBoxWindow);
+    delwin(dialogBoxWindow);
+    hasInitialized = false;
 }
 
 
