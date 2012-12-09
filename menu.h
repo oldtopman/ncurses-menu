@@ -1,25 +1,47 @@
 /*
-Please note that all of the variables used in quickMake are shadowed.
-I was inexperienced and had no idea.
-They are mostly used in the other functions, so quickMenu will no longer be updated.
+    ncurses-menu. A simpler, faster ncurses menu library.
+    Copyright (C) 2012  oldtopman
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program in the file labeled "LICENSE.txt".
+    If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <string>
 #include <ncurses.h>
+#include <iostream>
+#include <cstring>
+#include <string>
+#include "dialogBox.h"
 #ifndef MENU_H_INCLUDED
 #define MENU_H_INCLUDED
 
 class Menu{
     private:
-    bool hasMade, hasOptioned;
-    int menuHeight, intx, inty, intOptions, intActive, intLastActive, intWidth, intArea, intValue, titleCount, optionsCounter, clearOptionsCounter, optionsHeight, offset;
+    bool hasMade, hasOptioned, hasToolTips;
+    int menuHeight, intx, inty, intOptions, intActive, intLastActive, intWidth, intArea, intValue, titleCount, toolTipCount, optionsCounter, clearOptionsCounter, optionsHeight, offset;
     unsigned int longestWord;
     long longChar;
     char charCorner, charSide, charTop;
 
     char * titleArray[35];
+    std::string titleArrayString[35];
+    char * toolTipArray[35];
+    std::string toolTipArrayString[35];
     WINDOW* menuWindow;
     char * titleBuffer;
+    char * toolTipBuffer;
+    DialogBox toolTipDbox;
 
     int scrollMake(const char* p_csvTitles);
 
@@ -27,6 +49,7 @@ class Menu{
     int quickMake(const char* p_csvTitles,int intx,int inty,int p_height);
     int options(int p_intx, int p_inty, int p_height);
     int make(const char* p_csvTitles);
+    int toolTip(const char* p_csvToolTip);
     //scrollMake goes here, a private function.
     int value();
     void clean();
@@ -35,6 +58,7 @@ class Menu{
     Menu()
     :hasMade(false),
     hasOptioned(false),
+    hasToolTips(false),
     menuHeight(0),
     intx(0),
     inty(0),
@@ -45,6 +69,7 @@ class Menu{
     intArea(0),
     intValue(0),
     titleCount(0),
+    toolTipCount(0),
     optionsCounter(0),
     clearOptionsCounter(0),
     optionsHeight(0),
@@ -54,9 +79,17 @@ class Menu{
     charCorner('+'),
     charSide('|'),
     charTop('-'),
+    titleArray(),
+    titleArrayString(),
+    toolTipArray(),
+    toolTipArrayString(),
     menuWindow(newwin(menuHeight, intWidth, inty, intx)),
-    titleBuffer()
-    {}
+    titleBuffer(),
+    toolTipBuffer(),
+    toolTipDbox()
+    {
+        toolTipDbox.options(0,10,20,0);
+    }
 };
 
 

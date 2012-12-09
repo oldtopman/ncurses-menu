@@ -1,8 +1,31 @@
+/*
+    ncurses-menu. A simpler, faster ncurses menu library.
+    Copyright (C) 2012  oldtopman
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program in the file labeled "LICENSE.txt".
+    If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <ncurses.h>
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <cstring>
+#include <string>
+#include "dialogBox.h"
 #include "menu.h"
 
 int Menu::quickMake(const char* p_csvTitles,int intx,int inty,int p_height){
@@ -102,12 +125,20 @@ int Menu::make(const char* p_csvTitles){
 
     intArea = intWidth*menuHeight; //Calculate total area for cleanup program
 
+    //Set the options for the toolTipDbox.
+    if(hasToolTips == true){
+
+        //Draw it just to the right of the menu.
+        toolTipDbox.options(intx+intWidth+1,inty,0,0);
+    }
+
     menuWindow = newwin(menuHeight, intWidth, inty, intx); //Create the window
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
 	curs_set(0); //Turn off hte blinking cursor >:U
 
     mvwprintw(menuWindow, intActive, intWidth-3, "<="); // Print the starting arrow
+    if (hasToolTips == true){ toolTipDbox.make(toolTipArrayString[intActive-1].c_str()); } //Print the starting toolTip.
 
     while(optionsCounter < titleCount){
         mvwprintw(menuWindow, optionsCounter + 1, 1, titleArray[optionsCounter]);
@@ -141,8 +172,61 @@ int Menu::make(const char* p_csvTitles){
             intValue = intActive;
             return intActive;
         }
+
+        //Draw the tooltip (if applicable).
+        if (hasToolTips == true){
+            toolTipDbox.clean();
+            toolTipDbox.make(toolTipArrayString[intActive-1].c_str());
+        }
     }
     return -1;
+}
+
+
+int Menu::toolTip(const char* p_csvToolTip){
+
+    //Error on strings that are too short.
+    if(strlen(p_csvToolTip) < 3) { return -1; }
+
+    #ifdef _WIN32
+    //Error on strings that are too long.
+    if ((strlen(p_csvToolTip)+1) >= 9001){ return -1; }
+    char csvToolTipString[9001];
+    #else
+    char csvToolTipString[strlen(p_csvToolTip)+1];
+    #endif
+
+    //No need for strncpy due to the definition of the array based on the size of the string.
+    //Maybe do something about this for le winblows?
+    strcpy(csvToolTipString,p_csvToolTip);
+
+    toolTipBuffer = strtok(csvToolTipString,",");
+
+    while(toolTipBuffer != NULL){
+
+        //Save the titles into the array
+        toolTipArray[toolTipCount] = toolTipBuffer;
+        toolTipCount++;
+
+        //Calculate the longest word for the width of things.
+        if(strlen(toolTipBuffer) > longestWord ){ longestWord = strlen(toolTipBuffer); }
+
+        //Quit before an overflow.
+        if(toolTipCount >= 34){ return -1; }
+
+        toolTipBuffer = strtok(NULL,",");
+    }
+
+    //Read toolTips into string.
+    int counter = toolTipCount-1;
+    while(counter >= 0){
+        toolTipArrayString[counter] = toolTipArray[counter];
+        counter--;
+    }
+
+    //Close up.
+    hasToolTips = true;
+    return 0;
 }
 
 
@@ -204,20 +288,6 @@ int Menu::scrollMake(const char* p_csvTitles){
     while(true){
 
         //Clean out the menu.
-        /*
-        optionsCounter = 1;
-        while(optionsCounter < (optionsHeight - 2)){
-            mvwprintw(menuWindow,optionsCounter,1," ");
-            clearOptionsCounter = 1; //This allows for easy comparison
-            while(clearOptionsCounter < longestWord){
-                wprintw(menuWindow," ");
-                clearOptionsCounter++;
-                wrefresh(menuWindow);
-            }
-            optionsCounter++;
-            wrefresh(menuWindow);
-        }
-        */
         wclear(menuWindow);
         wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
         wrefresh(menuWindow);
@@ -262,6 +332,8 @@ int Menu::scrollMake(const char* p_csvTitles){
             intValue = intActive;
             return intActive;
         }
+
+
 
     }
 

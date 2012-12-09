@@ -1,7 +1,20 @@
 /*
-Please note that all of the variables used in quickMake are shadowed.
-I was inexperienced and had no idea.
-They are mostly used in the other functions, so quickMenu will no longer be updated.
+    ncurses-menu. A simpler, faster ncurses menu library.
+    Copyright (C) 2012  oldtopman
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program in the file labeled "LICENSE.txt".
+    If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <string>
@@ -14,8 +27,7 @@ class DialogBox{
     private:
     bool hasInitialized;
     bool attention;
-    int x,y,width,area,titleLength;
-    long keyPress;
+    int x,y,width,originalWidth;
     char charCorner, charSide, charTop;
 
     WINDOW* dialogBoxWindow;
@@ -35,9 +47,7 @@ class DialogBox{
     x(0),
     y(0),
     width(0),
-    area(0),
-    titleLength(0),
-    keyPress(0),
+    originalWidth(0),
     charCorner('+'),
     charSide('|'),
     charTop('-'),
