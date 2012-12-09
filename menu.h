@@ -28,22 +28,27 @@
 
 class Menu{
     private:
-    bool hasMade, hasOptioned, hasToolTips;
-    int menuHeight, intx, inty, intOptions, intActive, intLastActive, intWidth, intArea, intValue, titleCount, toolTipCount, optionsCounter, clearOptionsCounter, optionsHeight, offset;
-    unsigned int longestWord;
-    long longChar;
+    bool hasOptioned;
+    bool hasToolTips;
+    bool rememberPosition;
+    int intx, inty;
+    int intActive;
+    int intValue;
+    int optionsHeight;
     char charCorner, charSide, charTop;
 
-    char * titleArray[35];
+    std::string titleArrayString[35];
     std::string toolTipArrayString[35];
     WINDOW* menuWindow;
-    char * titleBuffer;
-    char * toolTipBuffer;
     DialogBox toolTipDbox;
 
     int scrollMake(const char* p_csvTitles);
 
     public:
+    Menu(const Menu&) = delete; // non-copyable
+    Menu& operator=(const Menu&) = delete; // non-copy-assignable
+
+    int remember(bool p_rememberPosition);
     int quickMake(const char* p_csvTitles,const char * p_csvToolTip,int intx,int inty,int p_height);
     int quickMake(const char* p_csvTitles,int intx,int inty,int p_height);
     int options(int p_intx, int p_inty, int p_height);
@@ -56,37 +61,26 @@ class Menu{
 
 
     Menu()
-    :hasMade(false),
-    hasOptioned(false),
+    :hasOptioned(false),
     hasToolTips(false),
-    menuHeight(0),
+    rememberPosition(false), //Default adjustment here.
     intx(0),
     inty(0),
-    intOptions(0),
     intActive(1),
-    intLastActive(1),
-    intWidth(15),
-    intArea(0),
     intValue(0),
-    titleCount(0),
-    toolTipCount(0),
-    optionsCounter(0),
-    clearOptionsCounter(0),
     optionsHeight(0),
-    offset(0),
-    longestWord(0),
-    longChar(0),
     charCorner('+'),
     charSide('|'),
     charTop('-'),
-    titleArray(),
+    titleArrayString(),
     toolTipArrayString(),
-    menuWindow(newwin(menuHeight, intWidth, inty, intx)),
-    titleBuffer(),
-    toolTipBuffer(),
+    menuWindow(),
     toolTipDbox()
     {
         toolTipDbox.options(0,10,20,0);
+    }
+
+    ~Menu(){
     }
 };
 

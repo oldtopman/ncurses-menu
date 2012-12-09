@@ -29,7 +29,15 @@
 #include "menu.h"
 
 
-int Menu::quickMake(const char* p_csvTitles,const char * p_csvToolTip,int intx,int inty,int p_height){
+int Menu::remember(bool p_rememberPosition){
+
+    //Record the memory on or off.
+    rememberPosition = p_rememberPosition;
+    return 0;
+}
+
+
+int Menu::quickMake(const char* p_csvTitles,const char * p_csvToolTip,int p_intx,int p_inty,int p_height){
 
     //Open up the error checking.
     int error;
@@ -38,17 +46,17 @@ int Menu::quickMake(const char* p_csvTitles,const char * p_csvToolTip,int intx,i
     error = Menu::toolTip(p_csvToolTip);
     if(error < 0){ return error; }
 
-    return Menu::quickMake(p_csvTitles,intx,inty,p_height);
+    return Menu::quickMake(p_csvTitles,p_intx,p_inty,p_height);
 }
 
 
-int Menu::quickMake(const char* p_csvTitles,int intx,int inty,int p_height){
+int Menu::quickMake(const char* p_csvTitles,int p_intx,int p_inty,int p_height){
 
     //Invalid input detection
-    if ( intx < 0 || inty < 0 ){return -1;}
+    if ( p_intx < 0 || p_inty < 0 ){return -1;}
 
     //Set options.
-    Menu::options(intx, inty,p_height);
+    Menu::options(p_intx, p_inty,p_height);
 
     //Draw menu
     Menu::make(p_csvTitles);
@@ -85,17 +93,20 @@ int Menu::make(const char * p_csvTitles, const char * p_csvToolTip){
 
 int Menu::make(const char* p_csvTitles){
 
+    //Declare local variables.
+    int counter = 0;
+    int intOptions = 0;
+    int intLastActive = 0;
+    int intWidth = 0;
+    int titleCount = 0;
+    int longestWord = 0;
+    long longChar = 0;
+    char * titleBuffer;
+    //End declaration of local variables.
+
     //Error if options not set.
     if(hasOptioned == false){
         return -1;
-    }
-
-    //Error if already made.
-    if(hasMade == true){
-        return -1;
-    }
-    else{
-        hasMade = true;
     }
 
     //Load scrolling menu if applicable.
@@ -126,7 +137,7 @@ int Menu::make(const char* p_csvTitles){
     while(titleBuffer != NULL){
 
         //Save the titles into the array
-        titleArray[titleCount] = titleBuffer;
+        titleArrayString[titleCount] = titleBuffer;
         titleCount++;
 
         //Calculate the longest word for the width of things.
@@ -142,10 +153,6 @@ int Menu::make(const char* p_csvTitles){
 
     intOptions = titleCount;
 
-    menuHeight = titleCount+2; //This contols the absolute menu height
-
-    intArea = intWidth*menuHeight; //Calculate total area for cleanup program
-
     //Set the options for the toolTipDbox.
     if(hasToolTips == true){
 
@@ -153,7 +160,7 @@ int Menu::make(const char* p_csvTitles){
         toolTipDbox.options(intx+intWidth+1,inty,0,0);
     }
 
-    menuWindow = newwin(menuHeight, intWidth, inty, intx); //Create the window
+    menuWindow = newwin(titleCount+2, intWidth, inty, intx); //Create the window
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
 	curs_set(0); //Turn off hte blinking cursor >:U
@@ -161,10 +168,11 @@ int Menu::make(const char* p_csvTitles){
     mvwprintw(menuWindow, intActive, intWidth-3, "<="); // Print the starting arrow
     if (hasToolTips == true){ toolTipDbox.make(toolTipArrayString[intActive-1].c_str()); } //Print the starting toolTip.
 
-    while(optionsCounter < titleCount){
-        mvwprintw(menuWindow, optionsCounter + 1, 1, titleArray[optionsCounter]);
+    counter = 0;
+    while(counter < titleCount){
+        mvwprintw(menuWindow, counter + 1, 1, titleArrayString[counter].c_str());
         wrefresh(menuWindow);
-        optionsCounter++;
+        counter++;
     }
     wrefresh(menuWindow); //Draw the screen
 
@@ -206,6 +214,12 @@ int Menu::make(const char* p_csvTitles){
 
 int Menu::toolTip(const char* p_csvToolTip){
 
+    //Declare local variables.
+    int toolTipCount = 0;
+    int longestToolTip = 0;
+    char * toolTipBuffer;
+    //End declaration of local variables.
+
     //Error on strings that are too short.
     if(strlen(p_csvToolTip) < 3) { return -1; }
 
@@ -230,7 +244,7 @@ int Menu::toolTip(const char* p_csvToolTip){
         toolTipCount++;
 
         //Calculate the longest word for the width of things.
-        if(strlen(toolTipBuffer) > longestWord ){ longestWord = strlen(toolTipBuffer); }
+        if(strlen(toolTipBuffer) > longestToolTip ){ longestToolTip = strlen(toolTipBuffer); }
 
         //Quit before an overflow.
         if(toolTipCount >= 34){ return -1; }
@@ -245,6 +259,18 @@ int Menu::toolTip(const char* p_csvToolTip){
 
 
 int Menu::scrollMake(const char* p_csvTitles){
+
+    //Declare local variables.
+    int counter = 0;
+    int intOptions = 0;
+    int intLastActive = 0;
+    int intWidth = 0;
+    int offset = 0;
+    int titleCount = 0;
+    int longestWord = 0;
+    long longChar = 0;
+    char * titleBuffer;
+    //End declaration of local variables.
 
     //Calculate the titles and etc.
     //Initialized here due to varying size.
@@ -268,7 +294,7 @@ int Menu::scrollMake(const char* p_csvTitles){
     while(titleBuffer != NULL){
 
         //Save the titles into the array
-        titleArray[titleCount] = titleBuffer;
+        titleArrayString[titleCount] = titleBuffer;
         titleCount++;
 
         //Calculate the longest word for the width of things.
@@ -284,8 +310,6 @@ int Menu::scrollMake(const char* p_csvTitles){
 
     intOptions = titleCount;
 
-    menuHeight = optionsHeight; //This contols the absolute menu height
-
     //Set the options for the toolTipDbox.
     if(hasToolTips == true){
 
@@ -293,18 +317,12 @@ int Menu::scrollMake(const char* p_csvTitles){
         toolTipDbox.options(intx+intWidth+1,inty,0,0);
     }
 
-    menuWindow = newwin(menuHeight, intWidth, inty, intx); //Create the window
+    menuWindow = newwin(optionsHeight, intWidth, inty, intx); //Create the window
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
 	curs_set(0); //Turn off hte blinking cursor >:U
 	wrefresh(menuWindow);
-	intArea = intWidth*menuHeight; //Calculate total area for cleanup program
 
-    while(optionsCounter < (optionsHeight - 2)){
-        mvwprintw(menuWindow, optionsCounter + 1, 1, titleArray[optionsCounter]);
-        wrefresh(menuWindow);
-        optionsCounter++;
-    }
 
     while(true){
 
@@ -314,10 +332,10 @@ int Menu::scrollMake(const char* p_csvTitles){
         wrefresh(menuWindow);
 
         //Draw the titles
-        optionsCounter = 1;
-        while((optionsCounter) <= (optionsHeight - 2)){
-            mvwprintw(menuWindow, optionsCounter, 1, titleArray[(optionsCounter - 1) + offset]);
-            optionsCounter++;
+        counter = 1;
+        while((counter) <= (optionsHeight - 2)){
+            mvwprintw(menuWindow, counter, 1, titleArrayString[(counter - 1) + offset].c_str());
+            counter++;
             wrefresh(menuWindow);
         }
 
@@ -376,32 +394,12 @@ int Menu::value(){
 
 
 void Menu::clean(){
-    box(menuWindow, ' ', ' ');
-    wborder(menuWindow, ' ', ' ', ' ',' ',' ',' ',' ',' ');
-    mvwprintw(menuWindow, 0, 0, " ");
-    while (intArea > 0) {
-        wprintw(menuWindow, " ");
-        intArea--;
-    }
+    wclear(menuWindow);
     wrefresh(menuWindow);
     delwin(menuWindow);
 
-    hasMade = false; //Defines whether or not the screen exists
-    menuHeight = 0; //Defines the height of the menu.
     //intx = 0; //Defines X coordinates of the upper left corner of the menu.
     //inty = 0; //Defines Y coordinates of the upper left corner of the menu.
-    intOptions = 0; //Defines the number of options in the menu.
-    intActive = 1; //Resets cursor position. Remove to activate cursor position memory.
-    intWidth = 15; //Sets width of the screen
-    intArea = 0; //Area of screen, used in the clearing of it.
-    titleCount = 0; //Sets number of titles in the screen
-    optionsCounter = 0; //Tracks the number of options we've created.
-    longestWord = 0; //Sets the width of the screen based on the longest word.
-    longChar = 0; //The keypress when scrolling up and down in menus.
-
-    //OPTIONAL VARIABLE ASSIGNMENTS
-    //Comment these to disable the described function
-    intLastActive = 1; //Keeps previous cursor position.
-    offset = 0; //Keeps current scrolling position in the menu.
+    if (rememberPosition == true){ intActive = 1;} //Resets cursor position on deletion. Adjust defaults in initialization list.
 }
 
