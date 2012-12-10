@@ -62,7 +62,7 @@ int DialogBox::make(const char* p_text){
 
     //Misc. vars.
     int count = 0;
-    long keyPress;
+    long keyPress = 0;
 
     //Vars for the line-splitting.
     int splitCounter = 0;
@@ -148,6 +148,9 @@ int DialogBox::make(const char* p_text){
     //Cleans it if you use the function again.
     keyPress = 0;
 
+    //Allow cleaning.
+    justCleaned = false;
+
     //If attention == false, exit.
     return 0;
 }
@@ -177,10 +180,18 @@ void DialogBox::update(){
 
 
 void DialogBox::clean(){
+
+    //Error if we try to clean twice in a row.
+    if(justCleaned == true){ return; }
+
+    //Clear window.
     wclear(dialogBoxWindow);
     wrefresh(dialogBoxWindow);
     delwin(dialogBoxWindow);
+
+    //Reset a few vars.
     hasInitialized = false;
+    justCleaned = true;
 }
 
 

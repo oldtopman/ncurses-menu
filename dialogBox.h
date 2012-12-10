@@ -25,7 +25,9 @@ class DialogBox{
     private:
     bool hasInitialized;
     bool attention;
-    int x,y,width,originalWidth;
+    bool justCleaned;
+    int x,y;
+    int width,originalWidth;
     char charCorner, charSide, charTop;
 
     WINDOW* dialogBoxWindow;
@@ -43,6 +45,7 @@ class DialogBox{
     DialogBox()
     :hasInitialized(false),
     attention(false),
+    justCleaned(true),
     x(0),
     y(0),
     width(0),

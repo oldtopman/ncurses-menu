@@ -29,14 +29,6 @@
 #include "menu.h"
 
 
-int Menu::remember(bool p_rememberPosition){
-
-    //Record the memory on or off.
-    rememberPosition = p_rememberPosition;
-    return 0;
-}
-
-
 int Menu::quickMake(const char* p_csvTitles,const char * p_csvToolTip,int p_intx,int p_inty,int p_height){
 
     //Open up the error checking.
@@ -85,9 +77,14 @@ int Menu::options(int p_intx, int p_inty,int p_height){
 
 
 int Menu::make(const char * p_csvTitles, const char * p_csvToolTip){
+
+    //Error handling.
+    int error;
+
     //Pass along the options.
-    Menu::toolTip(p_csvToolTip);
-    return Menu::make(p_csvTitles);
+    error = Menu::toolTip(p_csvToolTip);
+    if(error < 0){ return error; }
+    else{ return Menu::make(p_csvTitles); }
 }
 
 
@@ -205,7 +202,11 @@ int Menu::make(const char* p_csvTitles){
         //Draw the tooltip (if applicable).
         if (hasToolTips == true){
             toolTipDbox.clean();
-            toolTipDbox.make(toolTipArrayString[intActive-1].c_str());
+
+            //If we have a toolTip for that option, show it.
+            if (toolTipCount >= intActive){
+                toolTipDbox.make(toolTipArrayString[intActive-1].c_str());
+            }
         }
     }
     return -1;
@@ -215,13 +216,18 @@ int Menu::make(const char* p_csvTitles){
 int Menu::toolTip(const char* p_csvToolTip){
 
     //Declare local variables.
-    int toolTipCount = 0;
+    toolTipCount = 0;
     int longestToolTip = 0;
     char * toolTipBuffer;
     //End declaration of local variables.
 
     //Error on strings that are too short.
     if(strlen(p_csvToolTip) < 3) { return -1; }
+
+    //Quit if it's disabled.
+    if(enableToolTips == false){
+        return 0;
+    }
 
     #ifdef _WIN32
     //Error on strings that are too long.
@@ -398,8 +404,24 @@ void Menu::clean(){
     wrefresh(menuWindow);
     delwin(menuWindow);
 
-    //intx = 0; //Defines X coordinates of the upper left corner of the menu.
-    //inty = 0; //Defines Y coordinates of the upper left corner of the menu.
-    if (rememberPosition == true){ intActive = 1;} //Resets cursor position on deletion. Adjust defaults in initialization list.
+    if (rememberPosition == false){ intActive = 1;} //Resets cursor position on deletion. Adjust defaults in initialization list.
+    hasToolTips = 0; //Clean out the toolTip bool.
+}
+
+
+int Menu::disableToolTips(bool p_enableToolTips){
+
+    //Remember whether to enable/disable tooltips.
+    //Invert due to function name.
+    enableToolTips = !p_enableToolTips;
+    return 0;
+}
+
+
+int Menu::remember(bool p_rememberPosition){
+
+    //Record the memory on or off.
+    rememberPosition = p_rememberPosition;
+    return 0;
 }
 

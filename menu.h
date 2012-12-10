@@ -31,10 +31,12 @@ class Menu{
     bool hasOptioned;
     bool hasToolTips;
     bool rememberPosition;
+    bool enableToolTips;
     int intx, inty;
     int intActive;
     int intValue;
     int optionsHeight;
+    int toolTipCount;
     char charCorner, charSide, charTop;
 
     std::string titleArrayString[35];
@@ -48,27 +50,30 @@ class Menu{
     Menu(const Menu&) = delete; // non-copyable
     Menu& operator=(const Menu&) = delete; // non-copy-assignable
 
-    int remember(bool p_rememberPosition);
     int quickMake(const char* p_csvTitles,const char * p_csvToolTip,int intx,int inty,int p_height);
     int quickMake(const char* p_csvTitles,int intx,int inty,int p_height);
     int options(int p_intx, int p_inty, int p_height);
     int make(const char * p_csvTitles, const char * p_csvToolTip);
     int make(const char* p_csvTitles);
     int toolTip(const char* p_csvToolTip);
-    //scrollMake goes here, a private function.
+    //scrollMake is here, a private function.
     int value();
     void clean();
+    int disableToolTips(bool p_enableToolTips);
+    int remember(bool p_rememberPosition);
 
 
     Menu()
     :hasOptioned(false),
     hasToolTips(false),
     rememberPosition(false), //Default adjustment here.
+    enableToolTips(true),
     intx(0),
     inty(0),
     intActive(1),
     intValue(0),
     optionsHeight(0),
+    toolTipCount(0),
     charCorner('+'),
     charSide('|'),
     charTop('-'),
