@@ -137,8 +137,11 @@ int Menu::make(const char* p_csvTitles){
         titleArrayString[titleCount] = titleBuffer;
         titleCount++;
 
+        //Prevent unsigned-signed comparison.
+        int titleBufferLength = strlen(titleBuffer);
+
         //Calculate the longest word for the width of things.
-        if(strlen(titleBuffer) > longestWord ){ longestWord = strlen(titleBuffer); }
+        if(titleBufferLength > longestWord ){ longestWord = titleBufferLength; }
 
         //Quit before an overflow.
         if(titleCount >= 34){ break; }
@@ -160,10 +163,17 @@ int Menu::make(const char* p_csvTitles){
     menuWindow = newwin(titleCount+2, intWidth, inty, intx); //Create the window
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
-	curs_set(0); //Turn off hte blinking cursor >:U
+	curs_set(0); //Turn off the blinking cursor >:U
+
+	//Correct intActive if the number of titles is wrong.
+	if(intActive > titleCount){ intActive = 1; }
 
     mvwprintw(menuWindow, intActive, intWidth-3, "<="); // Print the starting arrow
-    if (hasToolTips == true){ toolTipDbox.make(toolTipArrayString[intActive-1].c_str()); } //Print the starting toolTip.
+
+    //Print the starting tooltip if we have one.
+    if (hasToolTips == true && toolTipCount >= intActive){
+        toolTipDbox.make(toolTipArrayString[intActive-1].c_str());
+    }
 
     counter = 0;
     while(counter < titleCount){
@@ -249,8 +259,11 @@ int Menu::toolTip(const char* p_csvToolTip){
         toolTipArrayString[toolTipCount] = toolTipBuffer;
         toolTipCount++;
 
+        //Prevent unsigned-signed comparison.
+        int toolTipBufferLength = strlen(toolTipBuffer);
+
         //Calculate the longest word for the width of things.
-        if(strlen(toolTipBuffer) > longestToolTip ){ longestToolTip = strlen(toolTipBuffer); }
+        if(toolTipBufferLength > longestToolTip ){ longestToolTip = toolTipBufferLength; }
 
         //Quit before an overflow.
         if(toolTipCount >= 34){ return -1; }
@@ -303,8 +316,11 @@ int Menu::scrollMake(const char* p_csvTitles){
         titleArrayString[titleCount] = titleBuffer;
         titleCount++;
 
+        //Prevent signed-unsigned comparison.
+        int titleBufferLength = strlen(titleBuffer);
+
         //Calculate the longest word for the width of things.
-        if(strlen(titleBuffer) > longestWord ){ longestWord = strlen(titleBuffer); }
+        if(titleBufferLength > longestWord ){ longestWord = titleBufferLength; }
 
         //Quit before an overflow.
         if(titleCount >= 34){ break; }
@@ -399,13 +415,24 @@ int Menu::value(){
 }
 
 
+int Menu::value(int p_value){
+    intValue = p_value;
+    return 0;
+}
+
+
 void Menu::clean(){
     wclear(menuWindow);
     wrefresh(menuWindow);
     delwin(menuWindow);
 
+    //Clear toolTipDbox id applicable.
+    if (hasToolTips == true){
+        toolTipDbox.clean();
+    }
+
     if (rememberPosition == false){ intActive = 1;} //Resets cursor position on deletion. Adjust defaults in initialization list.
-    hasToolTips = 0; //Clean out the toolTip bool.
+    hasToolTips = false; //Clean out the toolTip bool.
 }
 
 

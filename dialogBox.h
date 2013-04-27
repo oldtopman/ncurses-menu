@@ -37,7 +37,6 @@ class DialogBox{
     int options(int p_x,int p_y,int p_width,bool p_attention);
     int make(const char* p_text);
     int make(int p_number);
-    int makeNumber(int p_number);
     int title(const char* p_title);
     void update();
     void clean();

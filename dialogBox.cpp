@@ -76,7 +76,7 @@ int DialogBox::make(const char* p_text){
 
     #ifdef _WIN32
     //Error on strings that are too long.
-    if ((strlen(p_csvTitles)+1) >= 9001){ return -1; }
+    if ((strlen(p_text)+1) >= 9001){ return -1; }
     char textCharArray[9001];
     #else
     char textCharArray[strlen(p_text)+1];
@@ -94,8 +94,11 @@ int DialogBox::make(const char* p_text){
         splitTextArray[splitCounter] = splitBuffer;
         splitCounter++;
 
+        //Prevent signed-unsigned comparison.
+        int splitBufferLength = strlen(splitBuffer);
+
         //Calculate the longest word for the width of things.
-        if(strlen(splitBuffer) > longestLine ){ longestLine = strlen(splitBuffer); }
+        if(splitBufferLength > longestLine ){ longestLine = splitBufferLength; }
 
         //Quit before an overflow.
         if(splitCounter >= 34){ break; }

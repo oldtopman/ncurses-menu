@@ -58,6 +58,7 @@ class Menu{
     int toolTip(const char* p_csvToolTip);
     //scrollMake is here, a private function.
     int value();
+    int value(int p_value);
     void clean();
     int disableToolTips(bool p_enableToolTips);
     int remember(bool p_rememberPosition);
