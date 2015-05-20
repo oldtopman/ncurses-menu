@@ -1,6 +1,6 @@
 /*
     ncurses-menu. A simpler, faster ncurses menu library.
-    Copyright (C) 2012  oldtopman
+    Copyright (C) 2012-2015  oldtopman
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ int DialogBox::make(const char* p_text){
     //Declare local variables.
 
     //User-changable vars.
-    const char * splitChar = "_"; //Character to split lines on.
+    const char * splitChar = "\n"; //Character to split lines on.
 
     //Misc. vars.
     int count = 0;
@@ -98,7 +98,7 @@ int DialogBox::make(const char* p_text){
         int splitBufferLength = strlen(splitBuffer);
 
         //Calculate the longest word for the width of things.
-        if(splitBufferLength > longestLine ){ longestLine = splitBufferLength; }
+        if(splitBufferLength > longestLine ){ longestLine = splitBufferLength + 1; }
 
         //Quit before an overflow.
         if(splitCounter >= 34){ break; }
