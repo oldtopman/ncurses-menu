@@ -343,7 +343,12 @@ int Menu::scrollMake(const char* p_csvTitles){
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
 	curs_set(0); //Turn off hte blinking cursor >:U
-	wrefresh(menuWindow);
+        wrefresh(menuWindow);
+    //Calculate offsets and active numbers.
+    while(intActive >= (titleCount - optionsHeight - 1)){
+        offset++;
+        intActive--;
+    }
 
 
     while(true){
@@ -395,6 +400,9 @@ int Menu::scrollMake(const char* p_csvTitles){
         }
 
         if(longChar == ' '){
+            //Calculate the value that needs to be returned.
+            intActive += offset;
+            
             //Store the number for the value calculation.
             intValue = intActive;
             return intActive;
