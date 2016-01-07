@@ -342,13 +342,15 @@ int Menu::scrollMake(const char* p_csvTitles){
     menuWindow = newwin(optionsHeight, intWidth, inty, intx); //Create the window
     wborder(menuWindow, charSide, charSide, charTop, charTop, charCorner, charCorner, charCorner, charCorner); //Put the border on
     keypad(menuWindow, TRUE); //Init options for the screen
-	curs_set(0); //Turn off hte blinking cursor >:U
-        wrefresh(menuWindow);
+    curs_set(0); //Turn off hte blinking cursor >:U
+    wrefresh(menuWindow);
     //Calculate offsets and active numbers.
-    while(intActive >= (titleCount - optionsHeight - 1)){
+    
+    while(intActive >= (optionsHeight -1)){
         offset++;
         intActive--;
     }
+    
 
 
     while(true){
