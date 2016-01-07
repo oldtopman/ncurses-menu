@@ -393,7 +393,7 @@ int Menu::scrollMake(const char* p_csvTitles){
         }
 
         if(longChar == KEY_DOWN){
-            if (intActive < (optionsHeight - 2)){ //Endstop code
+            if ( (intActive < (optionsHeight - 2) ) && (intActive < intOptions) ){ //Endstop code
                 intActive++;
             }
             else if (offset < (titleCount - optionsHeight + 2)){ //Scroll code
